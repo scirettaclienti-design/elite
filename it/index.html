@@ -94,6 +94,29 @@
             }
         });
     </script>
+    <!-- Smooth Scroll (Lenis) -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+
+            requestAnimationFrame(raf);
+        });
+    </script>
 </head>
 
 <body>
@@ -121,6 +144,7 @@
     <main>
         <!-- HERO -->
         <section class="hero">
+            <div class="hero-aurora"></div> <!-- Aurora Effect -->
             <img src="/logo-elite.png" alt="ÉLITE Diplomatic Connection" class="hero-logo">
             <div class="line-grow"
                 style="width: 0; background: var(--color-gold-muted); height: 1px; width: 80px; margin: 2.5rem auto 1.5rem auto; opacity: 0.8; transition-delay: 1.2s;">
