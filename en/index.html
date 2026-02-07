@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELITE – Diplomatic Connection | Institutional Partner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Custom Cursor Logic
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+
+            if (window.matchMedia("(pointer: fine)").matches) {
+                window.addEventListener('mousemove', (e) => {
+                    const posX = e.clientX;
+                    const posY = e.clientY;
+                    cursorDot.style.left = `${posX}px`;
+                    cursorDot.style.top = `${posY}px`;
+                    cursorOutline.animate({
+                        left: `${posX}px`,
+                        top: `${posY}px`
+                    }, { duration: 500, fill: "forwards" });
+                });
+
+                document.querySelectorAll('a, .service-row, .card-spotlight, .process-step, button').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
+                    el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
+                });
+            }
+
+            // Spotlight Effect
+            document.querySelectorAll('.card-spotlight').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+
+            // Reveals
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+
+                        // Handle staggers
+                        if (entry.target.classList.contains('stagger-container')) {
+                            const items = entry.target.querySelectorAll('.stagger-item');
+                            items.forEach((item, index) => {
+                                setTimeout(() => {
+                                    item.classList.add('visible');
+                                }, index * 200);
+                            });
+                        }
+                    } else {
+                        // Exit animation (reset)
+                        entry.target.classList.remove('visible');
+
+                        // Reset staggers
+                        if (entry.target.classList.contains('stagger-container')) {
+                            const items = entry.target.querySelectorAll('.stagger-item');
+                            items.forEach(item => {
+                                item.classList.remove('visible');
+                            });
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal-text, .reveal-blur, .line-grow, .stagger-container').forEach(el => observer.observe(el));
+
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Cinematic Hero Logo Animation
+            const heroLogo = document.querySelector('.hero-logo');
+            if (heroLogo) {
+                setTimeout(() => {
+                    heroLogo.classList.add('visible');
+                }, 500);
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Grain Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <header>
+        <div class="container header-content" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="logo">
+                ÉLITE
+                <span>Diplomatic Connection</span>
+            </div>
+            <div class="lang-switch">
+                <a href="/en/"
+                    style="font-weight:bold; font-size: 0.8rem; letter-spacing: 0.1em; border-bottom: 1px solid currentColor;">EN</a>
+                <a href="/it/" style="opacity:0.5; margin-left:1rem; font-size: 0.8rem; letter-spacing: 0.1em;">IT</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <img src="/logo-elite.png" alt="ÉLITE Diplomatic Connection" class="hero-logo">
+            <div class="line-grow"
+                style="width: 0; background: var(--color-gold-muted); height: 1px; width: 80px; margin: 2.5rem auto 1.5rem auto; opacity: 0.8; transition-delay: 1.2s;">
+            </div>
+            <div class="reveal-wrapper">
+                <p class="reveal-blur"
+                    style="transition-delay: 1.5s; font-size: 1.15rem; letter-spacing: 0.08em; text-transform: uppercase; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                    The Invisible Architecture of International Diplomacy
+                </p>
+                <p class="reveal-blur"
+                    style="transition-delay: 1.8s; font-size: 0.95rem; opacity: 0.7; margin-top: 1.5rem; max-width: 650px; margin-left: auto; margin-right: auto; font-style: italic; font-family: var(--font-serif);">
+                    "Where protocol meets executive perfection, ensuring the continuity of Sovereignty beyond
+                    territorial
+                    borders."
+                </p>
+            </div>
+        </section>
+
+        <!-- VISION & APPROACH -->
+        <section class="section">
+            <div class="container">
+                <div class="reveal-wrapper mb-2">
+                    <h2 class="section-title reveal-blur text-center">Vision &amp; Doctrine</h2>
+                </div>
+                <div class="reveal-wrapper mb-2" style="max-width: 900px; margin: 0 auto 5rem auto;">
+                    <p class="reveal-blur text-center"
+                        style="color: var(--color-text-muted); font-size: 1.15rem; line-height: 1.9;">
+                        ÉLITE does not simply organize events; it builds <strong style="color: #fff;">strategic
+                            dialogue platforms</strong>.
+                        We operate as custodians of the institutional image, bridging the gap between high diplomatic
+                        vision and the
+                        operational complexity of the host territory.
+                    </p>
+                    <p class="reveal-blur text-center" style="margin-top: 2rem; color: var(--color-text-light);">
+                        Every action is guided by the principle of <strong style="color: #fff;">"Silent
+                            Impact"</strong>:
+                        absolute effectiveness that remains invisible, allowing only the prestige of the Mission to
+                        shine.
+                    </p>
+                </div>
+
+                <div class="grid-3 stagger-container">
+                    <div class="card-spotlight stagger-item">
+                        <h3>Sovereign Extension</h3>
+                        <p>We act as an extraterritorial operational extension of the Embassy.
+                            We integrate our resources with your offices, reducing logistical burden
+                            and allowing the Diplomatic Corps to focus exclusively on political objectives.</p>
+                    </div>
+                    <div class="card-spotlight stagger-item">
+                        <h3>Institutional Continuity</h3>
+                        <p>We guarantee that every initiative is a coherent chapter of a long-term narrative.
+                            We guard the historical memory of preferences and protocols, ensuring uniformity
+                            regardless of staff turnover.</p>
+                    </div>
+                    <div class="card-spotlight stagger-item">
+                        <h3>Intelligence &amp; Network</h3>
+                        <p>We offer immediate access to a confidential network of institutional stakeholders and elite
+                            partners,
+                            pre-qualified to operate at the maximum security and confidentiality levels required
+                            by government standards.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES (Operational Excellence) -->
+        <section class="section section-alt">
+            <div class="container">
+                <div class="reveal-wrapper mb-2">
+                    <h2 class="section-title reveal-blur text-center">Protocol &amp; Operations</h2>
+                </div>
+                <div class="line-grow"
+                    style="width: 0; background: var(--color-gold-muted); height: 1px; margin: 0 auto 3rem auto; opacity: 0.3;">
+                </div>
+                <div class="reveal-wrapper mb-2" style="max-width: 750px; margin: 0 auto 5rem auto;">
+                    <p class="reveal-blur text-center" style="color: var(--color-text-muted);">
+                        An integrated ecosystem of services, designed to meet the strict prerogatives
+                        of Diplomatic Missions.
+                    </p>
+                </div>
+
+                <div class="service-list">
+                    <div class="service-row">
+                        <div>
+                            <h4>State Ceremonial &amp; Etiquette</h4>
+                            <p>Rigorous management of precedence, seating plan supervision according to codified
+                                hierarchies, and delegation reception. Nothing is left to chance to ensure absolute
+                                respect for rank and fluidity of official interactions.</p>
+                        </div>
+                        <span>Protocol</span>
+                    </div>
+                    <div class="service-row">
+                        <div>
+                            <h4>Security &amp; Delegation Protection</h4>
+                            <p>Preventive coordination with Public Security authorities and Close Protection services.
+                                Planning purified routes and emergency protocols to guarantee the safety of Heads of
+                                State and Dignitaries in every scenario.</p>
+                        </div>
+                        <span>Security</span>
+                    </div>
+                    <div class="service-row">
+                        <div>
+                            <h4>Armored Logistics &amp; Mobility</h4>
+                            <p>Management of diplomatic fleets and escorted convoys. Millimetric coordination of airport
+                                arrivals and transfers with reserved access, ensuring punctuality and absolute
+                                discretion in movements.</p>
+                        </div>
+                        <span>Logistics</span>
+                    </div>
+                    <div class="service-row">
+                        <div>
+                            <h4>Institutional Scenography</h4>
+                            <p>Design of environments that reflect national authority and identity.
+                                Set-ups compliant with government visual identity manuals, with obsessive attention
+                                to the correct display of flags and national symbols.</p>
+                        </div>
+                        <span>Identity</span>
+                    </div>
+                    <div class="service-row">
+                        <div>
+                            <h4>Diplomatic Gastronomy</h4>
+                            <p>Curation of high-profile culinary experiences (Gala Dinners, Vin d'Honneur).
+                                Menus designed to honor traditions, strictly respecting religious and dietary precepts,
+                                and served with impeccable "White Glove" style.</p>
+                        </div>
+                        <span>Hospitality</span>
+                    </div>
+                    <div class="service-row">
+                        <div>
+                            <h4>Media Relations &amp; Communication</h4>
+                            <p>Management of press accreditation, drafting of joint communiqués, and reputational
+                                monitoring.
+                                We ensure that the event narrative is perfectly aligned with the Mission's foreign
+                                policy objectives.</p>
+                        </div>
+                        <span>Media</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPERATING MODEL -->
+        <section class="section">
+            <div class="container">
+                <div class="reveal-wrapper mb-2">
+                    <h2 class="section-title reveal-blur text-center">Collaboration Model</h2>
+                </div>
+
+                <div class="process-grid stagger-container">
+                    <div class="process-step stagger-item">
+                        <span class="step-number">01</span>
+                        <h3>Strategic Alignment</h3>
+                        <p>We do not just receive briefs; we study your political agenda. We establish a preventive
+                            dialogue to anticipate the needs of the annual diplomatic calendar.</p>
+                    </div>
+                    <div class="process-step stagger-item">
+                        <span class="step-number">02</span>
+                        <h3>Unique Direction</h3>
+                        <p>We centralize complexity. A single Senior Liaison Officer is responsible for the entire
+                            project, eliminating information dispersion and ensuring immediate reaction times.</p>
+                    </div>
+                    <div class="process-step stagger-item">
+                        <span class="step-number">03</span>
+                        <h3>Execution &amp; Debrief</h3>
+                        <p>Impeccable implementation with direct on-site supervision. Detailed post-event analysis
+                            to measure the return in terms of positioning and consolidate know-how for the future.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="container">
+                <div class="reveal-wrapper">
+                    <p class="reveal-blur"
+                        style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 3rem; color: #fff; max-width: 800px; margin-left: auto; margin-right: auto;">
+                        "Form is substance. Entrust the form to us so you can focus on political substance."
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="openModal('contact-modal')" class="btn-pulsate"
+                        style="display:inline-block; border:1px solid rgba(255,255,255,0.2); padding: 1rem 3rem; text-transform:uppercase; letter-spacing:0.1em; font-size:0.8rem; text-decoration: none; color: #fff; background: transparent; cursor: pointer; transition:all 0.4s ease;"
+                        onmouseover="this.style.borderColor='#fff'; this.style.background='#fff'; this.style.color='var(--color-navy)'"
+                        onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.background='transparent'; this.style.color='#fff'">
+                        Request Private Meeting
+                    </button>
+
+                    <button onclick="openModal('assessment-modal')"
+                        style="display:inline-block; border:1px solid var(--color-gold-muted); padding: 1rem 3rem; text-transform:uppercase; letter-spacing:0.1em; font-size:0.8rem; text-decoration: none; color: var(--color-gold-muted); background: transparent; cursor: pointer; transition:all 0.4s ease;"
+                        onmouseover="this.style.background='var(--color-gold-muted)'; this.style.color='var(--color-navy)'"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--color-gold-muted)'">
+                        Preliminary Event Assessment
+                    </button>
+                </div>
+
+                <div class="mt-4"
+                    style="font-size: 0.7rem; opacity: 0.4; letter-spacing: 0.05em; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3rem; margin-top: 4rem;">
+                    &copy; 2026 ÉLITE Diplomatic Connection. All Rights Reserved.<br>
+                    <span style="opacity: 0.7;">We operate with maximum confidentiality. The full portfolio is available
+                        only upon official request.</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- MODALS -->
+    <div id="contact-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('contact-modal')">&times;</button>
+            <h3 style="margin-bottom: 2rem; text-align: center;">Private Meeting Request</h3>
+            <form
+                onsubmit="event.preventDefault(); closeModal('contact-modal'); alert('Thank you. Your request involves priority handling.');">
+                <div class="form-group">
+                    <label>Institution / Embassy</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Official Representative</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Institutional Email</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Subject of Request</label>
+                    <textarea class="form-textarea"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Send Request</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="assessment-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('assessment-modal')">&times;</button>
+            <h3 style="margin-bottom: 2rem; text-align: center;">Preliminary Assessment</h3>
+            <p style="text-align: center; font-size: 0.9rem; margin-bottom: 2rem; opacity: 0.7;">Fill in essential data
+                to receive an initial operational analysis.</p>
+            <form
+                onsubmit="event.preventDefault(); closeModal('assessment-modal'); alert('Thank you. You will receive a preliminary assessment within 24 business hours.');">
+                <div class="form-group">
+                    <label>Event Type</label>
+                    <input type="text" class="form-input" placeholder="Ex. Gala Dinner, State Visit..." required>
+                </div>
+                <div class="form-group">
+                    <label>Expected Date / Period</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Guests</label>
+                    <input type="number" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Specific Needs</label>
+                    <textarea class="form-textarea" placeholder="Protocol, Security, Privacy..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Request Analysis</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+</body>
+
+</html>
