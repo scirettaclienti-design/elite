@@ -80,10 +80,11 @@
             // Using new reveal-blur class for smoother text animations
             document.querySelectorAll('.reveal-text, .reveal-blur, .line-grow, .stagger-container').forEach(el => observer.observe(el));
 
-            const header = document.querySelector('header');
-            window.addEventListener('scroll', () => {
-                header.classList.toggle('scrolled', window.scrollY > 50);
-            });
+            // Header scroll moved to Lenis callback for sync
+            // const header = document.querySelector('header');
+            // window.addEventListener('scroll', () => {
+            //     header.classList.toggle('scrolled', window.scrollY > 50);
+            // });
 
             // Cinematic Hero Logo Animation
             const heroLogo = document.querySelector('.hero-logo');
@@ -99,14 +100,36 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const lenis = new Lenis({
-                duration: 1.2,
+                duration: 1.6, // Longer duration for more "weight"
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                 direction: 'vertical',
                 gestureDirection: 'vertical',
                 smooth: true,
-                mouseMultiplier: 1,
+                mouseMultiplier: 0.8, // Slightly less sensitive
                 smoothTouch: false,
                 touchMultiplier: 2,
+            });
+
+            // Parallax Effect
+            lenis.on('scroll', ({ scroll }) => {
+                const aurora = document.querySelector('.hero-aurora');
+                if (aurora) {
+                    // Parallax using top/margin to avoid conflict with transform animation
+                    aurora.style.top = `calc(50% + ${scroll * 0.15}px)`;
+                }
+
+                document.querySelectorAll('.watermark-text').forEach(el => {
+                    const speed = el.getAttribute('data-speed');
+                    // Positive parallax: moves down as we scroll down, but slower than page (0.2speed = moves 20% of scroll).
+                    // This creates the effect of being "behind" the content.
+                    const yPos = (scroll * speed);
+                    el.style.transform = `translateY(${yPos}px)`;
+                });
+
+                const header = document.querySelector('header');
+                if (header) {
+                    header.classList.toggle('scrolled', scroll > 50);
+                }
             });
 
             function raf(time) {
@@ -126,6 +149,14 @@
     <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
+
+    <!-- Continuous Elements -->
+    <div class="central-spine"></div>
+    <div class="watermark-container">
+        <div class="watermark-text wm-1" data-speed="0.2">DIPLOMAZIA</div>
+        <div class="watermark-text wm-2" data-speed="0.15">SOVRANITÀ</div>
+        <div class="watermark-text wm-3" data-speed="0.25">ECCELLENZA</div>
+    </div>
 
     <header>
         <div class="container header-content" style="display:flex; justify-content:space-between; align-items:center;">
@@ -226,7 +257,22 @@
                 </div>
 
                 <div class="service-list">
-                    <div class="service-row">
+                    <!-- Featured Service (Moved to Top) -->
+                    <div class="service-row featured" onclick="openServiceModal('b2b')">
+                        <div>
+                            <h4>Diplomazia Economica &amp; Piattaforme B2B</h4>
+                            <p><strong>Il nuovo standard per le connessioni strategiche.</strong> Non solo eventi, ma
+                                vere
+                                piattaforme operative per incontri B2B tra aziende leader, istituzioni governative e
+                                ambasciate.
+                                Facilitiamo il dialogo diretto, trasformando la diplomazia in opportunità di sviluppo
+                                economico
+                                concreto e scambio culturale strutturato.</p>
+                        </div>
+                        <span>Strategic Focus</span>
+                    </div>
+
+                    <div class="service-row" onclick="openServiceModal('protocollo')">
                         <div>
                             <h4>Cerimoniale di Stato &amp; Etichetta</h4>
                             <p>Supervisione rigorosa delle precedenze, gestione del seating plan secondo gerarchie
@@ -236,7 +282,7 @@
                         </div>
                         <span>Protocollo</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('sicurezza')">
                         <div>
                             <h4>Sicurezza &amp; Protezione Delegazioni</h4>
                             <p>Coordinamento preventivo con le autorità di Pubblica Sicurezza e servizi di Close
@@ -247,7 +293,7 @@
                         </div>
                         <span>Security</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('logistica')">
                         <div>
                             <h4>Logistica Blindata &amp; Mobilità</h4>
                             <p>Gestione di flotte diplomatiche e convogli scortati. Coordinamento millimetrico degli
@@ -257,7 +303,7 @@
                         </div>
                         <span>Logistica</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('identita')">
                         <div>
                             <h4>Scenografia Istituzionale</h4>
                             <p>Design di ambienti che riflettono l'autorità e l'identità nazione.
@@ -266,7 +312,7 @@
                         </div>
                         <span>Identità</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('hospitality')">
                         <div>
                             <h4>Gastronomia Diplomatica</h4>
                             <p>Curatela di esperienze culinarie di alto profilo (Cene di Gala, Vin d'Honneur).
@@ -275,7 +321,7 @@
                         </div>
                         <span>Hospitality</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" style="border-bottom: none;" onclick="openServiceModal('media')">
                         <div>
                             <h4>Media Relations &amp; Comunicazione</h4>
                             <p>Gestione accreditamenti stampa, redazione comunicati congiunti e monitoraggio
@@ -284,6 +330,48 @@
                                 di politica estera della Missione.</p>
                         </div>
                         <span>Media</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STRATEGIA & FILANTROPIA -->
+        <section class="section">
+            <div class="container">
+                <div class="reveal-wrapper mb-2">
+                    <h2 class="section-title reveal-blur text-center">Impatto Strategico &amp; Sociale</h2>
+                </div>
+                <div class="reveal-wrapper mb-2" style="max-width: 900px; margin: 0 auto 5rem auto;">
+                    <p class="reveal-blur text-center"
+                        style="color: var(--color-text-muted); font-size: 1.15rem; line-height: 1.9;">
+                        Estendiamo la nostra cura <strong style="color: #fff;">anche a eventi più settoriali</strong>,
+                        come workshop su commercio internazionale,
+                        incontri su innovazione, o persino cene di gala per beneficenza.
+                    </p>
+                    <p class="reveal-blur text-center" style="margin-top: 2rem; color: var(--color-text-light);">
+                        La chiave è capire quali settori sono rilevanti per le relazioni bilaterali e <strong
+                            style="color: #fff;">costruire intorno a quello un calendario su misura</strong>.
+                    </p>
+                </div>
+
+                <div class="grid-3 stagger-container">
+                    <div class="card-spotlight stagger-item">
+                        <h3>Beneficenza Istituzionale</h3>
+                        <p>Eleviamo la filantropia a strumento di soft power. Progettiamo iniziative benefiche che
+                            riflettono i valori dell'Istituzione, garantendo che ogni donazione e patrocinio rafforzi il
+                            legame etico con il territorio.</p>
+                    </div>
+                    <div class="card-spotlight stagger-item">
+                        <h3>Gala &amp; Fundraising</h3>
+                        <p>Gestione integrale di Cene di Gala a scopo benefico. Dal protocollo di accoglienza per
+                            Heritage Donors alla regia delle aste, assicuriamo che la generosità sia celebrata con la
+                            massima solennità e trasparenza.</p>
+                    </div>
+                    <div class="card-spotlight stagger-item">
+                        <h3>Diplomazia dell'Innovazione</h3>
+                        <p>Curatela di workshop verticali e tavoli di lavoro su temi di frontiera. Creiamo ecosistemi
+                            temporanei dove il tessuto produttivo locale incontra l'eccellenza tecnologica e commerciale
+                            della Nazione ospite.</p>
                     </div>
                 </div>
             </div>
@@ -416,7 +504,132 @@
         </div>
     </div>
 
+    <!-- SERVICE DETAIL MODAL -->
+    <div id="service-detail-modal" class="modal-backdrop">
+        <div class="modal-content service-detail">
+            <button class="close-modal" onclick="closeModal('service-detail-modal')">&times;</button>
+            <div id="service-modal-content">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <script>
+        const serviceData = {
+            'b2b': {
+                title: "Diplomazia Economica & Piattaforme B2B",
+                intro: "Non ci limitiamo a ospitare delegazioni; costruiamo l'infrastruttura per accordi bilaterali duraturi. La nostra piattaforma trasforma l'evento diplomatico in un acceleratore di business.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Matching Strategico:</strong> Analisi preventiva dei settori industriali di interesse per creare agende di incontri mirati con CEO e decisori politici.</li>
+                        <li><strong>Roundtable Riservate:</strong> Organizzazione di tavoli tecnici a porte chiuse con stakeholder governativi e leader di settore.</li>
+                        <li><strong>Follow-up Istituzionale:</strong> Strutturazione dei report post-evento per monitorare l'avanzamento degli accordi preliminari.</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Forum Bilaterale Energia":</em> Organizzazione di una 2-giorni dove Ministri e CEO del settore energetico hanno siglato MoU strategici, con aree lounge riservate per la negoziazione privata.</p>
+                `
+            },
+            'protocollo': {
+                title: "Cerimoniale di Stato & Etichetta",
+                intro: "Il cerimoniale è il linguaggio silenzioso della diplomazia. Garantiamo che ogni gesto, posizione e sequenza rispetti la gerarchia e la storia delle relazioni tra gli stati.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Seating Plan Gerarchico:</strong> Gestione complessa di "Table d'Honneur" multilingua, rispettando l'ordine di precedenza (Vienna Convention).</li>
+                        <li><strong>Accoglienza Delegazioni:</strong> Gestione flussi VIP/VVIP con percorsi separati e greeting istituzionale all'arrivo.</li>
+                        <li><strong>Scambio Doni:</strong> Coordinamento del momento protocollare dello scambio dei doni ufficiali.</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Visita di Stato":</em> Supervisione completa del cerimoniale per la visita di un Capo di Stato estero, inclusa la gestione delle precedenze durante la firma dei trattati.</p>
+                `
+            },
+            'sicurezza': {
+                title: "Sicurezza & Protezione Delegazioni",
+                intro: "La sicurezza invisibile è la migliore. Proteggiamo i vostri dignitari integrando misure rigorose in un contesto di assoluta eleganza e fluidità.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Bonifica Ambienti:</strong> Sweeping elettronico e cinofilo delle location prima dell'arrivo delle autorità.</li>
+                        <li><strong>Close Protection Discreta:</strong> Agenti in abiti civili di alta sartoria che si fondono con gli ospiti, pronti a intervenire.</li>
+                        <li><strong>Gestione Emergenze:</strong> Piani di evacuazione medica (MedEvac) e percorsi di fuga pre-mappati.</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Summit G7 Collaterale":</em> Coordinamento della sicurezza perimetrale e interna per un evento con 5 Ministri degli Esteri, in raccordo con le forze dell'ordine locali.</p>
+                `
+            },
+            'logistica': {
+                title: "Logistica Blindata & Mobilità",
+                intro: "Il tempo è la risorsa più scarsa in una visita ufficiale. La nostra logistica garantisce precisione al secondo, muovendo delegazioni complesse senza frizioni.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Convogli Diplomatici:</strong> Gestione cortei auto con staffette e autisti formati alla guida evasiva/protettiva.</li>
+                        <li><strong>Fast Track Aeroportuale:</strong> Accesso diretto alle piste e gestione VIP Lounge per arrivi e partenze riservate.</li>
+                        <li><strong>Luggage Management:</strong> Gestione sicura e tracciata dei bagagli diplomatici dall'aereo all'hotel.</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Delegazione Commerciale 50+ Pax":</em> Movimentazione sincronizzata di una delegazione di 50 persone su 3 location diverse in un giorno, senza un minuto di ritardo.</p>
+                `
+            },
+            'identita': {
+                title: "Scenografia Istituzionale",
+                intro: "Trasformiamo spazi neutrali in territorio sovrano. Ogni elemento visivo deve comunicare l'autorità e i valori della nazione rappresentata.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Vessillologia Corretta:</strong> Rispetto maniacale delle regole di esposizione delle bandiere (ordine, dimensioni, stato).</li>
+                        <li><strong>Branding Istituzionale:</strong> Allestimenti scenici che utilizzano i codici visivi ufficiali senza apparire commerciali.</li>
+                        <li><strong>Atmosfera Solenne:</strong> Utilizzo di luci e materiali nobili per elevare la percezione dell'evento.</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Festa Nazionale in Residenza Esterna":</em> Trasformazione di una villa storica privata in una "Ambasciata temporanea" per la celebrazione della festa nazionale.</p>
+                `
+            },
+            'hospitality': {
+                title: "Gastronomia Diplomatica",
+                intro: "La tavola è il luogo dove si fa politica. Curiamo menu che sono strumenti di soft power, rispettando ogni restrizione e celebrando la cultura culinaria.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Menu Engineering Strategico:</strong> Creazione di percorsi culinari che fondono le tradizioni dei due paesi ospiti.</li>
+                        <li><strong>Rispetto Religioso & Dietetico:</strong> Garanzia assoluta su certificazioni Halal, Kosher e gestione allergeni complessi.</li>
+                        <li><strong>Servizio White Glove:</strong> Personale di sala formato specificamente per servire dignitari e reali (es. tempi servizio sincronizzati).</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Cena di Gala Iftar":</em> Organizzazione di un Iftar diplomatico ufficiale con menu certificato e rispetto rigoroso degli orari di preghiera e rottura del digiuno.</p>
+                `
+            },
+            'media': {
+                title: "Media Relations & Comunicazione",
+                intro: "Controlliamo la narrazione. Assicuriamo che l'evento riverberi pubblicamente esattamente come desiderato dalla strategia politica della Missione.",
+                details: `
+                    <h4>Cosa Offriamo</h4>
+                    <ul>
+                        <li><strong>Accreditamento Stampa Rigoroso:</strong> Vetting dei giornalisti e gestione aree press riservate.</li>
+                        <li><strong>Comunicati Congiunti:</strong> Supporto nella stesura e distribuzione di note stampa ufficiali post-evento.</li>
+                        <li><strong>Photo-Op Coreografati:</strong> Studio delle luci e posizioni per garantire la foto ufficiale perfetta ("The Handshake").</li>
+                    </ul>
+                    <h4>Esempi Concreti</h4>
+                    <p><em>"Conferenza Stampa Congiunta":</em> Allestimento e gestione flussi per una dichiarazione congiunta tra due Ambasciatori, con traduzione simultanea e diretta streaming criptata.</p>
+                `
+            }
+        };
+
+        function openServiceModal(key) {
+            const data = serviceData[key];
+            if (!data) return;
+
+            const contentDiv = document.getElementById('service-modal-content');
+            contentDiv.innerHTML = `
+                <h3>${data.title}</h3>
+                <p class="intro">${data.intro}</p>
+                ${data.details}
+            `;
+
+            openModal('service-detail-modal');
+        }
+
         function openModal(id) {
             document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden';

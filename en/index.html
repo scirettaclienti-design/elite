@@ -108,6 +108,26 @@
                 touchMultiplier: 2,
             });
 
+            // Parallax Effect
+            lenis.on('scroll', ({ scroll }) => {
+                const aurora = document.querySelector('.hero-aurora');
+                if (aurora) {
+                    aurora.style.top = `calc(50% + ${scroll * 0.15}px)`;
+                }
+
+                document.querySelectorAll('.watermark-text').forEach(el => {
+                    const speed = el.getAttribute('data-speed');
+                    // Positive parallax relative to absolute container
+                    const yPos = (scroll * speed);
+                    el.style.transform = `translateY(${yPos}px)`;
+                });
+
+                const header = document.querySelector('header');
+                if (header) {
+                    header.classList.toggle('scrolled', scroll > 50);
+                }
+            });
+
             function raf(time) {
                 lenis.raf(time);
                 requestAnimationFrame(raf);
@@ -125,6 +145,14 @@
     <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
+
+    <!-- Continuous Elements -->
+    <div class="central-spine"></div>
+    <div class="watermark-container">
+        <div class="watermark-text wm-1" data-speed="0.2">DIPLOMACY</div>
+        <div class="watermark-text wm-2" data-speed="0.15">SOVEREIGNTY</div>
+        <div class="watermark-text wm-3" data-speed="0.25">EXCELLENCE</div>
+    </div>
 
     <header>
         <div class="container header-content" style="display:flex; justify-content:space-between; align-items:center;">
@@ -226,7 +254,23 @@
                 </div>
 
                 <div class="service-list">
-                    <div class="service-row">
+                    <!-- Featured Service (Moved to Top) -->
+                    <div class="service-row featured" onclick="openServiceModal('b2b')">
+                        <div>
+                            <h4>Economic Diplomacy &amp; B2B Platforms</h4>
+                            <p><strong>The new standard for strategic connections.</strong> Not just events, but true
+                                operational platforms for B2B meetings between leading companies, government
+                                institutions,
+                                and
+                                embassies.
+                                We facilitate direct dialogue, transforming diplomacy into opportunities for concrete
+                                economic
+                                development and structured cultural exchange.</p>
+                        </div>
+                        <span>Strategic Focus</span>
+                    </div>
+
+                    <div class="service-row" onclick="openServiceModal('protocol')">
                         <div>
                             <h4>State Ceremonial &amp; Etiquette</h4>
                             <p>Rigorous management of precedence, seating plan supervision according to codified
@@ -235,7 +279,7 @@
                         </div>
                         <span>Protocol</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('security')">
                         <div>
                             <h4>Security &amp; Delegation Protection</h4>
                             <p>Preventive coordination with Public Security authorities and Close Protection services.
@@ -244,7 +288,7 @@
                         </div>
                         <span>Security</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('logistics')">
                         <div>
                             <h4>Armored Logistics &amp; Mobility</h4>
                             <p>Management of diplomatic fleets and escorted convoys. Millimetric coordination of airport
@@ -253,7 +297,7 @@
                         </div>
                         <span>Logistics</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('identity')">
                         <div>
                             <h4>Institutional Scenography</h4>
                             <p>Design of environments that reflect national authority and identity.
@@ -262,7 +306,7 @@
                         </div>
                         <span>Identity</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" onclick="openServiceModal('hospitality')">
                         <div>
                             <h4>Diplomatic Gastronomy</h4>
                             <p>Curation of high-profile culinary experiences (Gala Dinners, Vin d'Honneur).
@@ -271,7 +315,7 @@
                         </div>
                         <span>Hospitality</span>
                     </div>
-                    <div class="service-row">
+                    <div class="service-row" style="border-bottom: none;" onclick="openServiceModal('media')">
                         <div>
                             <h4>Media Relations &amp; Communication</h4>
                             <p>Management of press accreditation, drafting of joint communiqués, and reputational
@@ -409,7 +453,132 @@
         </div>
     </div>
 
+    <!-- SERVICE DETAIL MODAL -->
+    <div id="service-detail-modal" class="modal-backdrop">
+        <div class="modal-content service-detail">
+            <button class="close-modal" onclick="closeModal('service-detail-modal')">&times;</button>
+            <div id="service-modal-content">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <script>
+        const serviceData = {
+            'b2b': {
+                title: "Economic Diplomacy & B2B Platforms",
+                intro: "We don't just host delegations; we build the infrastructure for lasting bilateral agreements. Our platform transforms the diplomatic event into a business accelerator.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Strategic Matching:</strong> Preventive analysis of industrial sectors to create targeted meeting agendas with CEOs and policymakers.</li>
+                        <li><strong>Reserved Roundtables:</strong> Organization of closed-door technical tables with government stakeholders and sector leaders.</li>
+                        <li><strong>Institutional Follow-up:</strong> Structuring of post-event reports to monitor the progress of preliminary agreements.</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"Bilateral Energy Forum":</em> Organization of a 2-day event where Ministers and energy sector CEOs signed strategic MoUs, with reserved lounge areas for private negotiation.</p>
+                `
+            },
+            'protocol': {
+                title: "State Ceremonial & Etiquette",
+                intro: "Protocol is the silent language of diplomacy. We ensure that every gesture, position, and sequence respects hierarchy and the history of state relations.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Hierarchical Seating Plan:</strong> Complex management of "Table d'Honneur" respecting precedence (Vienna Convention).</li>
+                        <li><strong>Delegation Reception:</strong> VIP/VVIP flow management with separate paths and institutional greeting.</li>
+                        <li><strong>Gift Exchange:</strong> Coordination of the protocol moment for official gift exchange.</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"State Visit":</em> Complete ceremonial supervision for a foreign Head of State's visit, including precedence management during treaty signing.</p>
+                `
+            },
+            'security': {
+                title: "Security & Delegation Protection",
+                intro: "Invisible security is the best security. We protect your dignitaries by integrating rigorous measures into a context of absolute elegance and fluidity.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Environmental Sweeping:</strong> Electronic and canine sweeping of locations before authority arrival.</li>
+                        <li><strong>Discreet Close Protection:</strong> Agents in high-end civilian attire blending with guests, ready to intervene.</li>
+                        <li><strong>Emergency Management:</strong> MedEvac plans and pre-mapped escape routes.</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"G7 Side-Event":</em> Coordination of perimeter and internal security for an event with 5 Foreign Ministers, in liaison with local law enforcement.</p>
+                `
+            },
+            'logistics': {
+                title: "Armored Logistics & Mobility",
+                intro: "Time is the scarcest resource in an official visit. Our logistics ensure second-perfect precision, moving complex delegations without friction.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Diplomatic Convoys:</strong> Management of motorcades with outriders and drivers trained in evasive/protective driving.</li>
+                        <li><strong>Airport Fast Track:</strong> Direct tarmac access and VIP Lounge management for reserved arrivals/departures.</li>
+                        <li><strong>Luggage Management:</strong> Secure and tracked management of diplomatic pouches/luggage from plane to hotel.</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"Trade Delegation 50+ Pax":</em> Synchronized movement of a 50-person delegation across 3 distinct locations in one day, without a minute of delay.</p>
+                `
+            },
+            'identity': {
+                title: "Institutional Scenography",
+                intro: "We transform neutral spaces into sovereign territory. Every visual element must communicate the authority and values of the represented nation.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Correct Vexillology:</strong> Maniacal respect for flag display rules (order, dimensions, condition).</li>
+                        <li><strong>Institutional Branding:</strong> Scenic setups using official visual codes without appearing commercial.</li>
+                        <li><strong>Solemn Atmosphere:</strong> Use of lighting and noble materials to elevate the perception of the event.</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"National Day at External Residence":</em> Transformation of a private historic villa into a "Temporary Embassy" for National Day celebrations.</p>
+                `
+            },
+            'hospitality': {
+                title: "Diplomatic Gastronomy",
+                intro: "The table is where politics happens. We curate menus that serve as instruments of soft power, respecting every restriction and celebrating culinary culture.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Strategic Menu Engineering:</strong> Creation of culinary journeys blending traditions of both host countries.</li>
+                        <li><strong>Religious & Dietary Respect:</strong> Absolute guarantee on Halal, Kosher certifications and complex allergen management.</li>
+                        <li><strong>White Glove Service:</strong> Service staff specifically trained to serve dignitaries and royals (e.g., synchronized service timings).</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"Iftar Gala Dinner":</em> Organization of an official Diplomatic Iftar with certified menu and rigorous respect for prayer and breaking fast times.</p>
+                `
+            },
+            'media': {
+                title: "Media Relations & Communication",
+                intro: "We control the narrative. We ensure the event reverberates publicly exactly as desired by the Mission's political strategy.",
+                details: `
+                    <h4>What We Offer</h4>
+                    <ul>
+                        <li><strong>Rigorous Press Accreditation:</strong> Vetting of journalists and management of reserved press areas.</li>
+                        <li><strong>Joint Communiqués:</strong> Support in drafting and distributing official post-event press notes.</li>
+                        <li><strong>Choreographed Photo-Ops:</strong> Study of lighting and positions to ensure the perfect official photo ("The Handshake").</li>
+                    </ul>
+                    <h4>Concrete Examples</h4>
+                    <p><em>"Joint Press Conference":</em> Setup and flow management for a joint declaration between two Ambassadors, with simultaneous translation and encrypted live streaming.</p>
+                `
+            }
+        };
+
+        function openServiceModal(key) {
+            const data = serviceData[key];
+            if (!data) return;
+
+            const contentDiv = document.getElementById('service-modal-content');
+            contentDiv.innerHTML = `
+                <h3>${data.title}</h3>
+                <p class="intro">${data.intro}</p>
+                ${data.details}
+            `;
+
+            openModal('service-detail-modal');
+        }
+
         function openModal(id) {
             document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden';
