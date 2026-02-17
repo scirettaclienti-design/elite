@@ -100,14 +100,14 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const lenis = new Lenis({
-                duration: 1.6, // Longer duration for more "weight"
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                duration: 2.2, // significantly heavier for "Mercedes door" feel
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
                 direction: 'vertical',
                 gestureDirection: 'vertical',
                 smooth: true,
-                mouseMultiplier: 0.8, // Slightly less sensitive
+                mouseMultiplier: 0.6, // Heavy wheel feel
                 smoothTouch: false,
-                touchMultiplier: 2,
+                touchMultiplier: 1.5,
             });
 
             // Parallax Effect
@@ -632,17 +632,21 @@
 
         function openModal(id) {
             document.getElementById(id).classList.add('active');
+            document.querySelector('main').classList.add('main-blurred'); // Add blur
+            document.querySelector('.hero-logo')?.classList.add('blur-out'); // Optional extra
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
+            document.querySelector('main').classList.remove('main-blurred'); // Remove blur
             document.body.style.overflow = '';
         }
 
         window.onclick = function (event) {
             if (event.target.classList.contains('modal-backdrop')) {
                 event.target.classList.remove('active');
+                document.querySelector('main').classList.remove('main-blurred'); // Remove blur
                 document.body.style.overflow = '';
             }
         }

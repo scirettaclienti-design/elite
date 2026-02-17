@@ -170,6 +170,14 @@ strong {
     overflow: hidden;
 }
 
+/* Background Blur Class for Modals */
+.main-blurred {
+    filter: blur(8px) grayscale(40%);
+    transform: scale(0.98);
+    transition: filter 0.6s var(--ease-prestige), transform 0.6s var(--ease-prestige);
+    transform-origin: center center;
+}
+
 .watermark-text {
     position: absolute;
     width: 100%;
@@ -229,9 +237,10 @@ strong {
     opacity: 0;
     filter: blur(20px);
     transform: scale(0.95) translateY(40px);
+    letter-spacing: -0.05em;
+    /* Start slightly compressed */
     transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
-    /* More liquid ease */
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity, filter, letter-spacing;
     transform-style: preserve-3d;
 }
 
@@ -239,6 +248,8 @@ strong {
     opacity: 1;
     filter: blur(0);
     transform: scale(1) translateY(0) rotateX(0);
+    letter-spacing: 0;
+    /* Expand to normal */
 }
 
 /* Line Grow Animation */
@@ -763,17 +774,22 @@ html.lenis body {
     padding: 4rem 2rem;
     /* More generous vertical spacing */
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 0.6s var(--ease-prestige);
+    /* More generous vertical spacing */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Custom snappy ease */
     cursor: none;
     position: relative;
     overflow: hidden;
 }
 
 .service-row:hover {
-    padding-left: 60px;
+    padding-left: 50px;
+    /* Slightly reduced for elegance */
     padding-right: 20px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+    /* Brighter gold */
 }
 
 .service-row h4 {
